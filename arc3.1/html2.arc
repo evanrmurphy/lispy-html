@@ -65,7 +65,6 @@
 
 (def htmlf (s)
   (if no.s                   nil
-      ;(isa s 'string)        (html-w/quotes pr.s)
       atom.s                 pr.s
       (caris s 'arc)         (apply eval cdr.s)
       (html-macs* car.s)     (apply (html-macs* car.s) cdr.s)
