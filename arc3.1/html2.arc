@@ -1,4 +1,10 @@
+;;; html2.arc
+
+;; utils
+
 (def cdar (xs) (cdr (car xs)))
+
+;; main
 
 (let nestlev 0
 
@@ -81,6 +87,8 @@
        (do (apply htmlfs args)
            ; just puts return value on the next line
            (prn))))
+
+;; lib
 
 (html-mac link (text (o dest text))
   `((a href ,dest) ,text))
