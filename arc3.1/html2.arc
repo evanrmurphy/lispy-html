@@ -1,38 +1,26 @@
-(def cdar (xs)
-  (cdr (car xs)))
+(def cdar (xs) (cdr (car xs)))
 
-(let html-nestlev 0
+(let nestlev 0
 
-  (def html-q ()
-    (if (is html-nestlev 0)
-        (pr #\")
-        (pr "&quot;"))
-    
-    ; way to warn not on stdout?
+  (def q ()
+    (case nestlev
+      0  (pr #\")
+      1  (pr "&quot;")
+         (ero "maximum html nesting level exceeded")))
 
-    ;(if (> html-nestlev 1)
-    ;    (warn "maximum html nest level exceeded")) 
+  (def open-q () (q) ++.nestlev)
 
-    )
+  (def close-q () --.nestlev (q)))
 
-  (def html-openq ()
-    (html-q)
-    ++.html-nestlev)
-
-  (def html-closeq ()
-    --.html-nestlev
-    (html-q)))
-
-(mac html-w/quotes body
-  `(do (html-openq)
+(mac w/quotes body
+  `(do (open-q)
        ,@body
-       (html-closeq)))
-
+       (close-q)))
 
 (def attrs (as)
   (each a pair.as
     (pr #\ car.a #\=)
-    (html-w/quotes
+    (w/quotes
       (htmlf cadr.a))))
 
 (def start-tag (t . as)
@@ -81,6 +69,8 @@
 
 (mac html args
   `(apply htmlfs ',args))
+
+; bug: seems to be blocking stderr
 
 (def html-repl ()
   ((afn ()
