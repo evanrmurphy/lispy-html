@@ -48,9 +48,6 @@
 (mac html-mac (name args . body)
   `(= (html-macs* ',name) (fn ,args (htmlf ,@body))))
 
-(html-mac link (text (o dest text))
-  `((a href ,dest) ,text))
-
 (def htmlf (s)
   (if no.s                   nil
       atom.s                 pr.s
@@ -67,16 +64,24 @@
   (each a args
     htmlf.a))
 
-(mac html args
-  `(apply htmlfs ',args))
-
-; bug: seems to be blocking stderr
+; bug: repl seems to be blocking stderr
 
 (def html-repl ()
   ((afn ()
-     (pr "lispy-html> ")
+     (pr "html> ")
      (let that (read)
        (unless (iso that '(quit))
          (htmlfs that)
          (prn)
          (self))))))
+
+(def html args
+  (if (no args)
+       (html-repl)
+       (do (apply htmlfs args)
+           ; just puts return value on the next line
+           (prn))))
+
+(html-mac link (text (o dest text))
+  `((a href ,dest) ,text))
+
