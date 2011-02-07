@@ -54,24 +54,23 @@
 (mac html-mac (name args . body)
   `(= (html-macs* ',name) (fn ,args (htmlf ,@body))))
 
-(def parse-attrs (s)
-  ((afn (t as/body acc)
-     (if no.as/body
-          (apply empty-tag t rev.acc)
-         (or (acons car.as/body)
-             (isa car.as/body 'string))
-          (apply tag t rev.acc as/body)
-          (self t cddr.as/body (cons cadr.as/body
-                                     (cons car.as/body
-                                           acc)))))
-   car.s cdr.s nil))
+; should clean this up
+
+(def parse-attrs (t as/body acc)
+  (if no.as/body
+       (apply empty-tag t rev.acc)
+      (or (acons car.as/body)
+          (isa car.as/body 'string))
+       (apply tag t rev.acc as/body)
+       (let (attr val . rest) as/body
+         (parse-attrs t rest (cons val (cons attr acc))))))
 
 (def htmlf (s)
   (if no.s                   nil
       atom.s                 pr.s
       (caris s 'arc)         (apply eval cdr.s)
       (html-macs* car.s)     (apply (html-macs* car.s) cdr.s)
-                             (parse-attrs s)))
+                             (parse-attrs car.s cdr.s nil)))
 
 (def htmlfs args
   (each a args
