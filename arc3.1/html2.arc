@@ -4,7 +4,7 @@
 
 (def cdar (xs) (cdr (car xs)))
 
-;; main
+;; core
 
 (let nestlev 0
 
@@ -68,6 +68,7 @@
 (def htmlf (s)
   (if no.s                   nil
       atom.s                 pr.s
+      (caris s 'mac)         (eval `(html-mac ,@cdr.s))
       (caris s 'arc)         (apply eval cdr.s)
       (html-macs* car.s)     (apply (html-macs* car.s) cdr.s)
                              (parse-attrs car.s cdr.s nil)))
@@ -94,7 +95,7 @@
            ; just puts return value on the next line
            (prn))))
 
-;; tests
+;; tests and lib
 
 (def html-test (name x expected)
   (unless (iso (tostring:html x)
@@ -106,8 +107,19 @@
 (html-test "#3" '(foo a 1 "bar") "<foo a=\"1\">bar</foo>")
 (html-test "#4" '(foo a 1 (bar "baz")) "<foo a=\"1\"><bar>baz</bar></foo>")
 
-;; lib
-
 (html-mac link (text (o dest text))
-  `((a href ,dest) ,text))
+  `(a href ,dest ,text))
+
+(html-test "#5" '(link "foo") "<a href=\"foo\">foo</a>")
+(html-test "#6" '(link "foo" "http://bar.com") "<a href=\"http://bar.com\">foo</a>")
+
+(html-mac page args
+  `(html (body ,@args)))
+
+(html-test "#7" '(page "foo") "<html><body>foo</body></html>")
+
+(html-mac trtd body
+  `(tr (td ,@body)))
+
+(html-test "#8" '(trtd "foo") "<tr><td>foo</td></tr>")
 
