@@ -46,7 +46,7 @@
   (apply start-tag t as)
   (if (acons car.body)
        (apply htmlfs body)
-      (apply pr body))
+       (apply pr body))
   (end-tag t))
 
 (= html-macs* (table))
@@ -87,6 +87,18 @@
        (do (apply htmlfs args)
            ; just puts return value on the next line
            (prn))))
+
+;; tests
+
+(def test (name x expected)
+  (unless (iso (tostring:html x)
+               (string expected #\newline))
+    (err (string name " failed"))))
+
+(test "#1" '(foo) "<foo/>")
+(test "#2" '(bar) "<bar/>")
+(test "#3" '(foo (bar)) "<foo><bar/></foo>")
+(test "#4" '((foo a 1 b 2)) "<foo a=\"1\" b=\"2\"/>")
 
 ;; lib
 
