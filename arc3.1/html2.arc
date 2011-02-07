@@ -83,3 +83,11 @@
 
 (mac html args
   `(apply htmlfs ',args))
+
+(def html-repl ()
+  (let that nil
+    (until (is that '(quit))
+      (pr "lispy-html> ")
+      (= that (read))
+      (htmlfs that)
+      (prn))))
