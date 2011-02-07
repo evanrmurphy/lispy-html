@@ -68,14 +68,13 @@
       ;(isa s 'string)        (html-w/quotes pr.s)
       atom.s                 pr.s
       (caris s 'arc)         (apply eval cdr.s)
-      (caris s 'js)          (apply jsfs cdr.s)
       (html-macs* car.s)     (apply (html-macs* car.s) cdr.s)
       (acons car.s)          (if (no cdr.s)
                                   (apply empty-tag caar.s cdar.s)
-                                 (apply tag caar.s cdar.s cdr.s))
+                                  (apply tag caar.s cdar.s cdr.s))
                              (if (no cdr.s)
                                   (apply empty-tag car.s nil)
-                                 (apply tag car.s nil cdr.s))))
+                                  (apply tag car.s nil cdr.s))))
 
 (def htmlfs args
   (each a args
