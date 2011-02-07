@@ -123,3 +123,9 @@
 
 (html-test "#8" '(trtd "foo") "<tr><td>foo</td></tr>")
 
+(html-mac list args
+  `(ul ,@(map (fn (_) `(li ,_)) args)))
+
+(html-test "#9" '(list "foo") "<ul><li>foo</li></ul>")
+(html-test "#10" '(list "foo" "bar") "<ul><li>foo</li><li>bar</li></ul>")
+
