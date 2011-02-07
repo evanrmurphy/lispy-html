@@ -90,15 +90,22 @@
 
 ;; tests
 
-(def test (name x expected)
+(def html-test (name x expected)
   (unless (iso (tostring:html x)
                (string expected #\newline))
-    (err (string name " failed"))))
+    (err (string "html test " name " failed"))))
 
-(test "#1" '(foo) "<foo/>")
-(test "#2" '(bar) "<bar/>")
-(test "#3" '(foo (bar)) "<foo><bar/></foo>")
-(test "#4" '((foo a 1 b 2)) "<foo a=\"1\" b=\"2\"/>")
+(html-test "#1" '(foo) "<foo/>")
+(html-test "#2" '(bar) "<bar/>")
+(html-test "#3" '(foo (bar)) "<foo><bar/></foo>")
+(html-test "#4" '((foo a 1 b 2)) "<foo a=\"1\" b=\"2\"/>")
+
+; might want it to work this way
+
+; (html-test "#" '(foo) "<foo></foo>")
+; (html-test "#" '(foo a 1) "<foo a=\"1\"></foo>")
+; (html-test "#" '(foo a 1 "bar") "<foo a=\"1\">bar</foo>")
+; (html-test "#" '(foo a 1 (bar "baz")) "<foo a=\"1\"><bar>baz</bar></foo>")
 
 ;; lib
 
