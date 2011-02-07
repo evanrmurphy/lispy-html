@@ -54,17 +54,23 @@
 (mac html-mac (name args . body)
   `(= (html-macs* ',name) (fn ,args (htmlf ,@body))))
 
+; should clean this up
+
+(def parse-attrs (t as/body acc)
+  (if no.as/body
+       (apply empty-tag t rev.acc)
+      (or (acons car.as/body)
+          (isa car.as/body 'string))
+       (apply tag t rev.acc as/body)
+       (let (attr val . rest) as/body
+         (parse-attrs t rest (cons val (cons attr acc))))))
+
 (def htmlf (s)
   (if no.s                   nil
       atom.s                 pr.s
       (caris s 'arc)         (apply eval cdr.s)
       (html-macs* car.s)     (apply (html-macs* car.s) cdr.s)
-      (acons car.s)          (if (no cdr.s)
-                                  (apply empty-tag caar.s cdar.s)
-                                  (apply tag caar.s cdar.s cdr.s))
-                             (if (no cdr.s)
-                                  (apply empty-tag car.s nil)
-                                  (apply tag car.s nil cdr.s))))
+                             (parse-attrs car.s cdr.s nil)))
 
 (def htmlfs args
   (each a args
@@ -93,19 +99,12 @@
 (def html-test (name x expected)
   (unless (iso (tostring:html x)
                (string expected #\newline))
-    (err (string "html test " name " failed"))))
+    (ero (string "html test " name " failed"))))
 
 (html-test "#1" '(foo) "<foo/>")
-(html-test "#2" '(bar) "<bar/>")
-(html-test "#3" '(foo (bar)) "<foo><bar/></foo>")
-(html-test "#4" '((foo a 1 b 2)) "<foo a=\"1\" b=\"2\"/>")
-
-; might want it to work this way
-
-; (html-test "#" '(foo) "<foo></foo>")
-; (html-test "#" '(foo a 1) "<foo a=\"1\"></foo>")
-; (html-test "#" '(foo a 1 "bar") "<foo a=\"1\">bar</foo>")
-; (html-test "#" '(foo a 1 (bar "baz")) "<foo a=\"1\"><bar>baz</bar></foo>")
+(html-test "#2" '(foo a 1) "<foo a=\"1\"/>")
+(html-test "#3" '(foo a 1 "bar") "<foo a=\"1\">bar</foo>")
+(html-test "#4" '(foo a 1 (bar "baz")) "<foo a=\"1\"><bar>baz</bar></foo>")
 
 ;; lib
 
