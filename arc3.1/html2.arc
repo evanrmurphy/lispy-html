@@ -84,9 +84,10 @@
   `(apply htmlfs ',args))
 
 (def html-repl ()
-  (let that nil
-    (until (is that '(quit))
-      (pr "lispy-html> ")
-      (= that (read))
-      (htmlfs that)
-      (prn))))
+  ((afn ()
+     (pr "lispy-html> ")
+     (let that (read)
+       (unless (iso that '(quit))
+         (htmlfs that)
+         (prn)
+         (self))))))
