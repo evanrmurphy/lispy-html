@@ -134,3 +134,21 @@
 
 (html-test "#11" '(row "foo") "<tr><td>foo</td></tr>")
 (html-test "#12" '(row "foo" "bar") "<tr><td>foo</td><td>bar</td></tr>")
+
+(html-mac tab body
+  `(table border 0 ,@body))
+
+(html-test "#13" '(tab "foo") "<table border=\"0\">foo</table>")
+(html-test "#14" '(tab (tr (td "foo") (td "bar"))) "<table border=\"0\"><tr><td>foo</td><td>bar</td></tr></table>")
+
+(html-mac table-of (b p s . body)
+  `(table border ,b cellpadding ,p cellspacing ,s
+     ,@body))
+
+(html-test "#15" '(table-of 0 2 0 "foo") "<table border=\"0\" cellpadding=\"2\" cellspacing=\"0\">foo</table>")
+
+(html-mac zerotable body
+  `(table-of 0 0 0
+     ,@body))
+
+(html-test "#16" '(zerotable "foo") "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">foo</table>")
