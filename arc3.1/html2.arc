@@ -129,3 +129,8 @@
 (html-test "#9" '(list "foo") "<ul><li>foo</li></ul>")
 (html-test "#10" '(list "foo" "bar") "<ul><li>foo</li><li>bar</li></ul>")
 
+(html-mac row args
+  `(tr ,@(map (fn (_) `(td ,_)) args)))
+
+(html-test "#11" '(row "foo") "<tr><td>foo</td></tr>")
+(html-test "#12" '(row "foo" "bar") "<tr><td>foo</td><td>bar</td></tr>")
